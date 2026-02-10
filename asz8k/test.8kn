@@ -1,0 +1,7 @@
+; Trivial Z8002 test program
+__text	.sect
+	nop
+	ld R0,#42
+	ld R1,R0
+	ret
+	.end

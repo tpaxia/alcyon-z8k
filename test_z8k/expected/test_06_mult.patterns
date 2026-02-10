@@ -1,0 +1,3 @@
+# Multiply and divide should produce mult/div instructions
+mult
+div

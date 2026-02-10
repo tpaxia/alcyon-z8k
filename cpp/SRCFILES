@@ -1,0 +1,8 @@
+CPP_SRCS = cexpr.c lex.c macro.c main.c
+
+OBJS = $(CPP_SRCS:.c=.o)
+
+SRCS = $(CPP_SRCS) preproc.h
+
+EXTRA_DIST1 = Makefile SRCFILES
+EXTRA_DIST2 = GNUmakefile

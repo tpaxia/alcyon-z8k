@@ -1,0 +1,2 @@
+# "x = 42" should produce a store
+# Requires ASSIGN skeleton (Step 3)

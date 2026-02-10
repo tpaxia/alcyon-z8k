@@ -1,0 +1,8 @@
+C1Z8K_SRCS = interf.c main.c codegen.c canon.c optab.c putexpr.c smatch.c cskels.c sucomp.c tabl.c util.c
+
+C1Z8K_OBJS = $(C1Z8K_SRCS:.c=.o)
+
+SRCS = $(C1Z8K_SRCS) cgen.h cskel.h icode.h
+
+EXTRA_DIST1 = Makefile SRCFILES
+EXTRA_DIST2 = GNUmakefile

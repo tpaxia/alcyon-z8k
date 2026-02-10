@@ -1,0 +1,3 @@
+# Function call should produce push args and call
+call _add
+push @R15,

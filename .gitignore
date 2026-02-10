@@ -1,0 +1,34 @@
+# Build artifacts
+*.o
+*.a
+
+# Built executables
+cpp/cp68
+parser/c068
+cgen/c168
+cgen_z8k/c1z8k
+as/as68
+asz8k/asz8k
+asz8k/asz8k_dbg
+link68/link68
+link68/relmod
+link68/reldump
+ld8k/ld8k
+ld8k/xcon
+ld8k/xdump
+ld8k/ar8k
+optimize/optimize
+util/size68
+util/nm68
+util/ar68
+util/analyze
+
+# Temp/scratch files
+VM.TMP
+test.obj
+test.lst
+*.tmp
+
+# macOS
+.DS_Store
+*.dSYM
