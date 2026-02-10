@@ -1,0 +1,48 @@
+This project contains code from multiple sources with different origins:
+
+1. ALCYON C COMPILER (cpp/, parser/, cgen/, as/, link68/, optimize/, util/)
+   Copyright (c) 1982-1983 Alcyon Corporation
+   Originally part of the Alcyon C Development System for Motorola 68000.
+   Digital Research acquired Alcyon and shipped this compiler with CP/M-68K
+   and Atari TOS development kits.
+   Source obtained from: https://github.com/th-otto/tos3x (alcyon/ directory)
+   Note: th-otto's repository includes portability fixes and bug fixes
+   applied on top of the original Digital Research distribution. That
+   repository does not include an explicit license.
+
+2. CP/M-8000 TOOLS (asz8k/, ld8k/, libcpm/)
+   Copyright (c) 1982-1983 Digital Research Inc.
+   From the CP/M-8000 source distribution for Zilog Z8000.
+   Modified for cross-compilation on modern systems (POSIX I/O,
+   byte-swapping for little-endian hosts, fixed-width types).
+
+   These files are distributed under the permissive license granted by
+   DRDOS, Inc. (2022):
+
+     "Let this paragraph represent a right to use, distribute, modify,
+     enhance, and otherwise make available in a nonexclusive manner CP/M
+     and its derivatives. This right comes from the company, DRDOS, Inc.'s
+     purchase of Digital Research, the company and all assets, dating back
+     to the mid-1990's. DRDOS, Inc. and I, Bryan Sparks, President of
+     DRDOS, Inc. as its representative, is the owner of CP/M and the
+     successor in interest of Digital Research assets."
+
+3. Z8002 CODE GENERATOR AND RUNTIME (cgen_z8k/, libcpm/lmul.S,
+   libcpm/ldiv.S, libcpm/lrem.S, libcpm/startup.s)
+   Copyright (c) 2025-2026 tpaxia
+   New work: Z8002 retarget of the Alcyon C code generator, plus
+   runtime library routines for long integer arithmetic.
+
+   Permission is hereby granted, free of charge, to any person obtaining
+   a copy of this software and associated documentation files, to deal
+   in the Software without restriction, including without limitation the
+   rights to use, copy, modify, merge, publish, distribute, sublicense,
+   and/or sell copies of the Software, and to permit persons to whom the
+   Software is furnished to do so, subject to the following conditions:
+
+   The above copyright notice and this permission notice shall be
+   included in all copies or substantial portions of the Software.
+
+   THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+   EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+   MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
