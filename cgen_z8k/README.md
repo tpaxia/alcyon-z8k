@@ -168,8 +168,9 @@ Successfully compiled and run on CP/M-8000: "Hello from Alcyon C on Z8002!"
 ## Known Limitations
 
 - Prologue/epilogue (`link`, `unlk`, `rts`, `bra`) are emitted as literal
-  assembly by the parser, not the code generator. These still use 68000
-  mnemonics and need post-processing or parser modification.
+  assembly by the parser in 68000 syntax. The code generator translates
+  these to Z8002 equivalents (`push`/`ld`/`add` for link, `ld`/`pop` for
+  unlk, `ret` for rts, `jp` for bra) via `translate_68k_line()` in `main.c`.
 - Some inline type-conversion skeletons for unsigned char operations
   (`ctasg0a`, `ctasg0b`) may produce incorrect register names when the
   parent node type differs from the operand type. These cases use the
