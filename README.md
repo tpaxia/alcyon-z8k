@@ -64,14 +64,16 @@ bash test_z8k/run_tests.sh run        # end-to-end on Z8000 emulator
 
 Three test suites:
 
-- **codegen** (30 tests) — compile C to Z8002 assembly and diff against expected output.
+- **codegen** (40 tests) — compile C to Z8002 assembly and diff against expected output.
   Covers: empty functions, return, assignment, arithmetic, branches, function calls,
   multiply/divide, shifts, compound assignment, post/pre-increment, type casts,
   loops, pointers, arrays, structs, logical operators, switch (small and jump-table),
   long arithmetic, strings, nested expressions, local variables, unsigned operations,
   ternary operator, function pointers, comma operator, sizeof, pointer arithmetic,
-  break/continue.
-- **asm** (30 tests) — reuses codegen sources: compile + assemble + convert to x.out.
+  break/continue, named constants, multi-dimensional arrays, nested structs, static
+  locals, register variables, address-of on locals/arrays/functions, complex lvalue
+  increment, mixed-type arithmetic, chained assignment, character operations.
+- **asm** (40 tests) — reuses codegen sources: compile + assemble + convert to x.out.
 - **run** (11 tests) — end-to-end: compile, assemble, link with crt0, run on Z8000
   emulator, check return value in R0. Tests: constant return, arithmetic, function
   calls (simple, composed, recursive), local/global variables, if/else, while loops,
