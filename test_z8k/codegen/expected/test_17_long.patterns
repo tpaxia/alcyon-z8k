@@ -1,0 +1,6 @@
+# Long operations use 32-bit loads and library calls for mult/div
+ldl
+# Multiply calls lmul library routine
+call lmul
+# Divide calls ldiv library routine
+call ldiv

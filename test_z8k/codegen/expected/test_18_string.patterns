@@ -1,0 +1,4 @@
+# String literal referenced by label
+ld _msg,#L
+# String data in data section as bytes
+\.byte

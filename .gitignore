@@ -29,6 +29,12 @@ test.obj
 test.lst
 *.tmp
 
+# Test suite output
+test_z8k/*/output/
+
+# Emulator build
+z8000_emu/build/
+
 # macOS
 .DS_Store
 *.dSYM

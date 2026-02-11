@@ -1,0 +1,6 @@
+# Complex expression needs mult and add/sub
+mult RR
+add R
+sub R
+# Nested if needs multiple compare-and-branch
+cp

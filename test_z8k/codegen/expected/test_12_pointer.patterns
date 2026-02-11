@@ -1,0 +1,4 @@
+# Address-of loads address with immediate
+ld _p,#_x
+# Dereference uses indirect addressing via register
+ld .*(R1)

@@ -56,10 +56,19 @@ make -C ld8k        # ld8k, xcon, xdump, ar8k
 ## Testing
 
 ```sh
-cd test_z8k && bash run_tests.sh
+bash test_z8k/run_tests.sh            # run all suites
+bash test_z8k/run_tests.sh codegen    # codegen patterns only
+bash test_z8k/run_tests.sh asm        # compile + assemble
+bash test_z8k/run_tests.sh run        # end-to-end on Z8000 emulator
 ```
 
-Runs 11 regression tests checking for correct Z8002 assembly output.
+Three test suites:
+
+- **codegen** — 24 tests: compile C to Z8002 assembly and check instruction patterns
+- **asm** — reuses codegen sources: compile + assemble + convert to x.out
+- **run** — compile, link, run on Z8000 emulator, check return value in R0
+
+The `run` suite requires the `z8000_emu` submodule (`git submodule update --init`).
 
 ## Provenance
 

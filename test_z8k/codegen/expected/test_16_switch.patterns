@@ -1,0 +1,3 @@
+# Switch should load the discriminant and branch to cases
+# (Currently uses 68000-isms cmp/beq — KNOWN BUG)
+cmp|cp

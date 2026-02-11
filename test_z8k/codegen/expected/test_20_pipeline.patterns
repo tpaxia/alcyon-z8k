@@ -1,0 +1,5 @@
+# Full pipeline — check basic function structure
+call _add
+push @R15,R14
+pop R14,@R15
+ret
