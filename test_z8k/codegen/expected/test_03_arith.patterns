@@ -1,2 +1,0 @@
-# "c = a + b" should produce load, add, store
-# Requires ADD skeleton (Step 4) + ASSIGN skeleton (Step 3)

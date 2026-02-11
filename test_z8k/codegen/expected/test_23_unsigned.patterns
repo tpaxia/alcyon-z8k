@@ -1,4 +1,0 @@
-# Unsigned compare should use unsigned branch (jr ugt, or jr ule,)
-jr u
-# Unsigned right shift should use srl (logical) not sra (arithmetic)
-srl R

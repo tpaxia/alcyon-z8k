@@ -192,7 +192,7 @@
 #define OPCONVS     0100000
 
 /* 68000 definitions */
-#define PTRSIZE     4
+#define PTRSIZE     2
 #define LONGSIZE    4
 #define INTSIZE     2
 #define CHARSIZE    1

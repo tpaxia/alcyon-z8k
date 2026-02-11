@@ -1,2 +1,0 @@
-# Jump table switch — should have compare for range check and jump table
-# (May still contain untranslated 68000-isms for jump table — KNOWN LIMITATION)

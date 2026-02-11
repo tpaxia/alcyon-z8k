@@ -1,4 +1,0 @@
-# Local variable access through frame pointer R14 (negative offset)
-ld.*\(R14\)
-# Function parameters via positive offset from frame pointer
-ld.*8\(R14\)

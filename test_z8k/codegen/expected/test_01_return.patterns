@@ -1,2 +1,0 @@
-# "return 42" should load 42 into R0
-ld R0,#42

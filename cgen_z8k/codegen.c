@@ -676,13 +676,10 @@ PP(struct tnode *tp;)						/* pointer to expression tree */
 	if (tp->t_op == SYMBOL && tp->t_sc == STRUCT)
 	{
 		error(_("structure operation not implemented"));
-	} else if (stacksize)
+	} else
 	{
 		codegen(tp, FORSTACK, 0);
 		nb = cdsize(tp);
-	} else
-	{
-		codegen(tp, FORSP, 0);
 	}
 	return nb;
 }

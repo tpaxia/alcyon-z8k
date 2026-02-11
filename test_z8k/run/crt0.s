@@ -8,6 +8,7 @@ _start:
 	ld R15,#0FFFEh	; stack pointer at top of 64K RAM
 	ldk R14,#0	; clear frame pointer
 	call _main	; call C main() — return value in R0
-	halt		; stop — emulator reports registers
+			; (blank line: asz8k eats one line after call with external symbol)
+	.word 07A00h	; halt — stop, emulator reports registers
 __data	.sect
 	.end

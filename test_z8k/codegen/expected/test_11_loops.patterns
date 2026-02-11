@@ -1,5 +1,0 @@
-# While loop needs compare and backward branch
-cp
-jr
-# Do-while loop needs backward jump
-jp

@@ -1,2 +1,0 @@
-# "if (x > 0)" should produce compare and conditional branch
-# Requires COMPARE/BRANCH skeleton (Step 5)

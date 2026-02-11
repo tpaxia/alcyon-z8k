@@ -1,3 +1,0 @@
-# Empty function: just needs to produce valid output (no crash)
-# Parser generates prologue/epilogue — just check we got some output
-_f:

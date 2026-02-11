@@ -135,8 +135,6 @@ PP(int nas;)								/* number of A registers */
 	}
 
 	SAVESTATE(savep, lfil, sbol);
-	if (!nds && !nas)					/* adjust for 1 arg */
-		nlocs += 4;
 	oprintf("link R14,#%d\n", -nlocs);
 	if (nds || nas)
 	{

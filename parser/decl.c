@@ -297,7 +297,7 @@ PP(struct symbol *fsp;)
 	} else
 	{
 		localsize = 0;					/* end of first auto offset from l.e.p. */
-		offset = 8;						/* first arg offset from l.e.p. */
+		offset = 4;						/* first arg offset from l.e.p. */
 		scope_level = FUNC_SCOPE;
 		scope_decls[FUNC_SCOPE] = 1;	/* force at this level */
 		for (fp = &fargtab[0]; fp->f_sp; fp++)

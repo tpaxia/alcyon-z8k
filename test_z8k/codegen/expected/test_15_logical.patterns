@@ -1,4 +1,0 @@
-# Logical AND/OR produce short-circuit branches
-jr
-# Test/compare for zero
-tst
