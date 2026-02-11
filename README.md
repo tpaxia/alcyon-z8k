@@ -64,9 +64,18 @@ bash test_z8k/run_tests.sh run        # end-to-end on Z8000 emulator
 
 Three test suites:
 
-- **codegen** — 24 tests: compile C to Z8002 assembly and check instruction patterns
-- **asm** — reuses codegen sources: compile + assemble + convert to x.out
-- **run** — compile, link, run on Z8000 emulator, check return value in R0
+- **codegen** (30 tests) — compile C to Z8002 assembly and diff against expected output.
+  Covers: empty functions, return, assignment, arithmetic, branches, function calls,
+  multiply/divide, shifts, compound assignment, post/pre-increment, type casts,
+  loops, pointers, arrays, structs, logical operators, switch (small and jump-table),
+  long arithmetic, strings, nested expressions, local variables, unsigned operations,
+  ternary operator, function pointers, comma operator, sizeof, pointer arithmetic,
+  break/continue.
+- **asm** (30 tests) — reuses codegen sources: compile + assemble + convert to x.out.
+- **run** (11 tests) — end-to-end: compile, assemble, link with crt0, run on Z8000
+  emulator, check return value in R0. Tests: constant return, arithmetic, function
+  calls (simple, composed, recursive), local/global variables, if/else, while loops,
+  bit shifts, relational operators.
 
 The `run` suite requires the `z8000_emu` submodule (`git submodule update --init`).
 
@@ -90,10 +99,14 @@ The code comes from three sources:
 
 ## Known Limitations
 
-- Prologue/epilogue instructions are emitted by the parser in 68000 syntax;
-  the code generator translates them to Z8002 but this is fragile.
 - Long immediate operands (`ldl mem,#imm32`, `pushl @R15,#imm32`,
   `cpl mem,#imm32`) generate invalid Z8000 addressing modes.
+- The assembler (asz8k) silently consumes the source line following a `call`
+  to an external symbol. Workaround: insert a blank line after such calls.
+- The assembler does not recognize the `halt` mnemonic; use `.word 07A00h`.
+- `sub @R15,#imm` (memory-immediate subtract) is not a valid Z8000 instruction
+  but the codegen emits it for expressions like `f(n - 1)` where the subtraction
+  is folded into the argument push. Workaround: use a temporary variable.
 - Float operations emit library calls but no Z8002 floating-point runtime
   exists yet.
 
