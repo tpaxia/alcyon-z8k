@@ -45,7 +45,7 @@ static int creatb(const char *name, int mode)
 
 #define MODNO 256	/* max allowable modules per load */
 #define MAPNO 512	/* max map entries per load */
-#define SYMPNO 4096	/* total number of symbols in all modules */
+#define SYMPNO 8192	/* total number of symbols in all modules */
 #define SEGNO 128	/* max number of segments per module */
 #define FILNO 128	/* max number of files to process */
 #define POSNO 256	/* max number of items in libraries */
@@ -176,7 +176,6 @@ int	objfile,
 	errcnt,
 	udefcnt,
 	debug,
-	*hpos,
 	seg,
 	nonseg,
 	splitid,
@@ -200,6 +199,8 @@ long	stacksiz,
 	relvalc,
 	bpos = 1;
 
+
+short	*hpos;		/* pointer into hash table for next insertion */
 
 /* forward declarations */
 void pass0(int argc, char **argv);
@@ -387,26 +388,34 @@ void p1entry(int n)
 
 	if( !rdhead() ) return;
 	if( (uint16_t)x_hdr.x_magic == AR8KMAGIC ){  /* an archive! */
+		int changed, pass=0;
 		if( udefcnt == 0 ) return;
-		i = 2;  /* sizeof magic word on disk */
-		fpos = i;
-		lseek( infile, fpos, 0 );
-		while( ((i = read( infile, &ar8k_hd, AR8SIZ)) == AR8SIZ )
-		    && ( ar8k_hd.ar8k_name[0] != '\0') ){
-			swap_ar(&ar8k_hd);
-			if( trysim() ){
-				if( filtab[ n ].posndx <= 0 )
-					filtab[ n ].posndx = posmax+1;
-				postab[ ++posmax ] = fpos + AR8SIZ;
-				lseek( infile, fpos + AR8SIZ, 0 );
-				if( !rdhead() ) return;
-				p1load();
-				if( udefcnt == 0 ) return;
-			}
-			fpos += AR8SIZ + ar8k_hd.ar8k_size;
-			round( fpos );
+		do {
+			if(debug) fprintf(stderr,"archive pass %d, udefcnt=%d\n", ++pass, udefcnt);
+			changed = 0;
+			i = 2;  /* sizeof magic word on disk */
+			fpos = i;
 			lseek( infile, fpos, 0 );
-		}
+			while( ((i = read( infile, &ar8k_hd, AR8SIZ)) == AR8SIZ )
+			    && ( ar8k_hd.ar8k_name[0] != '\0') ){
+				swap_ar(&ar8k_hd);
+				if( trysim() ){
+					if(debug) fprintf(stderr,"  LOADING member %.8s at fpos=%ld\n",
+						ar8k_hd.ar8k_name, fpos);
+					if( filtab[ n ].posndx <= 0 )
+						filtab[ n ].posndx = posmax+1;
+					postab[ ++posmax ] = fpos + AR8SIZ;
+					lseek( infile, fpos + AR8SIZ, 0 );
+					if( !rdhead() ) return;
+					p1load();
+					changed = 1;
+					if( udefcnt == 0 ) return;
+				}
+				fpos += AR8SIZ + ar8k_hd.ar8k_size;
+				round( fpos );
+				lseek( infile, fpos, 0 );
+			}
+		} while( changed && udefcnt > 0 );
 		if( filtab[n].posndx > 0 ) ++posmax;
 		return;
 	}
@@ -507,7 +516,7 @@ case X_SY_SEG:		k = lookup( seghash, SEGHASH, symtab[i].x_sy_name );
 			*syp = k;
 			continue;
 
-case X_SY_LOC:		hpos = (int *)&discard;
+case X_SY_LOC:		hpos = &discard;
 			if( nolocal ) continue;
 			break;
 
@@ -1169,7 +1178,7 @@ int lookup(short *htab, int HTAB, char *sym)
 				if( idmatch( sym, symtab[ j ].x_sy_name ))
 					return( j );
 			} else {
-				hpos = (int *)&htab[ i ];
+				hpos = &htab[ i ];
 				return( -1 );
 			}
 			i++;
