@@ -347,11 +347,13 @@ PP(const char *line;)
 	p = line;
 	while (*p == ' ' || *p == '\t') p++;
 
-	/* handle label prefix (e.g., "L1:unlk R14") */
-	{
+	/* handle label prefix(es) (e.g., "L2:L1:unlk R14") */
+	for (;;) {
 		const char *colon = strchr(p, ':');
-		if (colon != NULL && colon > p) {
-			/* output the label prefix followed by newline */
+		if (colon == NULL || colon == p) break;
+		/* only peel if the prefix looks like a label (Ln:) */
+		if (*p != 'L' && *p != '_' && *p != '~') break;
+		{
 			int len = (int)(colon - p) + 1;
 			int i;
 			for (i = 0; i < len; i++)
@@ -392,6 +394,121 @@ PP(const char *line;)
 	/* bra LN */
 	if (sscanf(p, "bra L%d", &n) == 1) {
 		oprintf("\tjp L%d", n);
+		return;
+	}
+
+	/*
+	 * Switch table instructions — emitted by the parser's outswitch().
+	 * Simple switch (ncases <= 4): cmp #val,R0 / beq Llab
+	 * Jump table switch: cmp #val,R0 / bhi Llab / sub #val,R0 / asl #N,R0
+	 */
+
+	/* cmp #val,Rn → cp Rn,#val (swap operands, 68k→Z8002) */
+	{
+		int cval;
+		if (sscanf(p, "cmp #%d,R%d", &cval, &r1) == 2) {
+			oprintf("\tcp R%d,#%d", r1, cval);
+			return;
+		}
+	}
+
+	/* tst Rn — same on Z8002 */
+	if (sscanf(p, "tst R%d", &r1) == 1) {
+		oprintf("\ttst R%d", r1);
+		return;
+	}
+
+	/* 68000 branch mnemonics → Z8002 conditional jumps */
+	if (sscanf(p, "beq L%d", &n) == 1) {
+		oprintf("\tjr eq,L%d", n);
+		return;
+	}
+	if (sscanf(p, "bne L%d", &n) == 1) {
+		oprintf("\tjr ne,L%d", n);
+		return;
+	}
+	if (sscanf(p, "bhi L%d", &n) == 1) {
+		oprintf("\tjr ugt,L%d", n);
+		return;
+	}
+	if (sscanf(p, "bls L%d", &n) == 1) {
+		oprintf("\tjr ule,L%d", n);
+		return;
+	}
+	if (sscanf(p, "bgt L%d", &n) == 1) {
+		oprintf("\tjr gt,L%d", n);
+		return;
+	}
+	if (sscanf(p, "bge L%d", &n) == 1) {
+		oprintf("\tjr ge,L%d", n);
+		return;
+	}
+	if (sscanf(p, "blt L%d", &n) == 1) {
+		oprintf("\tjr lt,L%d", n);
+		return;
+	}
+	if (sscanf(p, "ble L%d", &n) == 1) {
+		oprintf("\tjr le,L%d", n);
+		return;
+	}
+
+	/* sub #val,Rn → sub Rn,#val (swap operands, used in jump table switch) */
+	{
+		int sval;
+		if (sscanf(p, "sub #%d,R%d", &sval, &r1) == 2) {
+			oprintf("\tsub R%d,#%d", r1, sval);
+			return;
+		}
+	}
+
+	/* asl #N,Rn → sla Rn,#N (shift left arithmetic, swap operands) */
+	{
+		int shamt;
+		if (sscanf(p, "asl #%d,R%d", &shamt, &r1) == 2) {
+			oprintf("\tsla R%d,#%d", r1, shamt);
+			return;
+		}
+	}
+
+	/*
+	 * Jump table instructions — emitted by the parser for large switches.
+	 * These are deeply 68000-specific; full Z8002 support would require
+	 * parser changes (16-bit pointers, different table format). For now,
+	 * translate what we can.
+	 */
+
+	/* move Rn,Rm → ld Rm,Rn (swap operands) */
+	{
+		int r2;
+		if (sscanf(p, "move R%d,R%d", &r1, &r2) == 2) {
+			oprintf("\tld R%d,R%d", r2, r1);
+			return;
+		}
+	}
+
+	/* move.l (Rn),Rm → ld Rm,(Rn) (load indirect, swap operands) */
+	{
+		int r2;
+		if (sscanf(p, "move.l (R%d),R%d", &r1, &r2) == 2) {
+			oprintf("\tld R%d,(R%d)", r2, r1);
+			return;
+		}
+	}
+
+	/* add.l #Sym,Rn → add Rn,#Sym (swap operands, drop .l) */
+	if (strncmp(p, "add.l #", 7) == 0) {
+		const char *q = p + 7;
+		const char *comma = strchr(q, ',');
+		if (comma && sscanf(comma + 1, "R%d", &r1) == 1) {
+			int symlen = (int)(comma - q);
+			oprintf("\tadd R%d,#%.*s", r1, symlen, q);
+			return;
+		}
+	}
+
+	/* jmp (Rn) → jp @Rn (indirect jump) */
+	if (sscanf(p, "jmp (R%d)", &r1) == 1) {
+		oprintf("\tjp @R%d", r1);
 		return;
 	}
 
